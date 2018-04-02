@@ -1,8 +1,8 @@
 import xml.etree.ElementTree as ET
 import os
 
-os.chdir('/home/chris/Desktop/Treebanks')
-indir = os.listdir('/home/chris/Desktop/Treebanks')
+os.chdir('/home/chris/Desktop/CustomTB')
+indir = os.listdir('/home/chris/Desktop/CustomTB')
 
 for file_name in indir:
     tb = ET.parse(file_name)
