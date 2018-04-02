@@ -1,42 +1,14 @@
 import xml.etree.ElementTree as ET
 from collections import Counter
-import string
 import os
 import pandas as pd
+from Utility import deaccent
 
 formOrLemma = 'lemma'
 wordCounter = Counter()
 artCounter = Counter()
 finalDict = {}
 firstWordList = []
-
-
-def deaccent(dastring):
-    """Returns an unaccented version of dastring."""
-    aeinput = "άἀἁἂἃἄἅἆἇὰάᾀᾁᾂᾃᾄᾅᾆᾇᾰᾱᾲᾳᾴᾶᾷἈἉΆἊἋἌἍἎἏᾈᾉᾊᾋᾌᾍᾎᾏᾸᾹᾺΆᾼέἐἑἒἓἔἕὲέἘἙἚἛἜἝΈῈΈ"
-    aeoutput = "ααααααααααααααααααααααααααΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑΑεεεεεεεεεΕΕΕΕΕΕΕΕΕ"
-    hoinput = "ΉῊΉῌἨἩἪἫἬἭἮἯᾘᾙᾚᾛᾜᾝᾞᾟήἠἡἢἣἤἥἦἧὴήᾐᾑᾒᾓᾔᾕᾖᾗῂῃῄῆῇὀὁὂὃὄὅόὸόΌὈὉὊὋὌὍῸΌ"
-    hooutput = "ΗΗΗΗΗΗΗΗΗΗΗΗΗΗΗΗΗΗΗΗηηηηηηηηηηηηηηηηηηηηηηηηοοοοοοοοοΟΟΟΟΟΟΟΟΟ"
-    iuinput = "ΊῘῙῚΊἸἹἺἻἼἽἾἿΪϊίἰἱἲἳἴἵἶἷΐὶίῐῑῒΐῖῗΫΎὙὛὝὟϓϔῨῩῪΎὐὑὒὓὔὕὖὗΰϋύὺύῠῡῢΰῦῧ"
-    iuoutput = "ΙΙΙΙΙΙΙΙΙΙΙΙΙΙιιιιιιιιιιιιιιιιιιιΥΥΥΥΥΥΥΥΥΥΥΥυυυυυυυυυυυυυυυυυυυ"
-    wrinput = "ώὠὡὢὣὤὥὦὧὼώᾠᾡᾢᾣᾤᾥᾦᾧῲῳῴῶῷΏὨὩὪὫὬὭὮὯᾨᾩᾪᾫᾬᾭᾮᾯῺΏῼῤῥῬ"
-    wroutput = "ωωωωωωωωωωωωωωωωωωωωωωωωΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩρρΡ"
-    # Strings to feed into translator tables to remove diacritics.
-
-    aelphas = str.maketrans(aeinput, aeoutput, "⸀⸁⸂⸃·,.—")
-    # This table also removes text critical markers and punctuation.
-
-    hoes = str.maketrans(hoinput, hooutput, string.punctuation)
-    # Removes other punctuation in case I forgot any.
-
-    ius = str.maketrans(iuinput, iuoutput, '0123456789')
-    # Also removes numbers (from verses).
-
-    wros = str.maketrans(wrinput, wroutput, string.ascii_letters)
-    # Also removes books names.
-
-    return dastring.translate(aelphas).translate(hoes).translate(ius).translate(wros).lower()
-
 
 def proiellist(treebank, wordtype, firstwordlist):
     """Find every word of the chosen part of speech which appears
@@ -220,7 +192,7 @@ for key in finalDict:
 
 df = pd.DataFrame.from_items(finalDict2.items(), orient='index', columns=['Total', 'Articular', 'PercArt']*(fnNum + 1))
 
-outname = 'ArtDistance.csv'
+outname = 'Articular.csv'
 outdir = '/home/chris/Desktop'
 outpath = os.path.join(outdir, outname)
 df.to_csv(outpath)
