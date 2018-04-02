@@ -99,7 +99,7 @@ for file_name in indir:
 
 df = pd.DataFrame.from_dict(artPos, orient='index')
 
-outname = 'NTArtDistance.csv'
+outname = 'ArtDistance.csv'
 outdir = '/home/chris/Desktop'
 outpath = os.path.join(outdir, outname)
 df.to_csv(outpath)
