@@ -56,8 +56,8 @@ def perseustbs(treebank, artpos, filename):
     return artpos
 
 
-os.chdir('/home/chris/Desktop/KoineTB')
-indir = os.listdir('/home/chris/Desktop/KoineTB')
+os.chdir('/home/chris/Desktop/CustomTB')
+indir = os.listdir('/home/chris/Desktop/CustomTB')
 
 for file_name in indir:
     tb = ET.parse(file_name)

@@ -25,3 +25,8 @@ def deaccent(dastring):
     # Also removes books names.
 
     return dastring.translate(aelphas).translate(hoes).translate(ius).translate(wros).lower()
+
+def denumber(dalemma):
+    numers = str.maketrans('', '', '01234567890')
+
+    return dalemma.translate(numers)
