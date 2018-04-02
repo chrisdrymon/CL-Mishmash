@@ -1,31 +1,9 @@
 import pandas as pd
-import string
 from collections import Counter
 import math
 import os
 import glob
-
-aeInput = "ΆάἀἁἂἃἄἅἆἇὰάἈἉἊἋἌἍἎἏᾀᾁᾂᾃᾄᾅᾆᾇᾈᾉᾊᾋᾌᾍᾎᾏᾰᾱᾲᾳᾴᾶᾷᾸᾹᾺΆᾼέἐἑἒἓἔἕἘἙἚἛἜἝΈὲέῈΈ"
-aeOutput = "ααααααααααααααααααααααααααααααααααααααααααααααααεεεεεεεεεεεεεεεεεε"
-hoInput = "ΉήἠἡἢἣἤἥἦἧἨἩἪἫἬἭἮἯὴήᾐᾑᾒᾓᾔᾕᾖᾗᾘᾙᾚᾛᾜᾝᾞᾟῂῃῄῆῇῊΉῌΌὀὁὂὃὄὅὈὉὊὋὌὍόὸόῸΌ"
-hoOutput = "ηηηηηηηηηηηηηηηηηηηηηηηηηηηηηηηηηηηηηηηηηηηηοοοοοοοοοοοοοοοοοο"
-iuInput = "ΊϊίἰἱἲἳἴἵἶἷἸἹἺἻἼἽἾἿΐΪὶίῐῑῒΐῖῗῘῙῚΊΫΎὐὑὒὓὔὕὖὗὙὛὝὟΰϋύϓϔὺύῠῡῢΰῦῧῨῩῪΎ"
-iuOutput = "ιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιιυυυυυυυυυυυυυυυυυυυυυυυυυυυυυυυ"
-wrInput = "ΏώὠὡὢὣὤὥὦὧὨὩὪὫὬὭὮὯὼώᾠᾡᾢᾣᾤᾥᾦᾧᾨᾩᾪᾫᾬᾭᾮᾯῲῳῴῶῷῺΏῼῤῥῬ"
-wrOutput = "ωωωωωωωωωωωωωωωωωωωωωωωωωωωωωωωωωωωωωωωωωωωωρρρ"
-# Strings to feed into translator tables to remove diacriticals.
-
-aelphas = str.maketrans(aeInput, aeOutput, "⸀⸁⸂⸃·,.—")
-# This table also removes text critical markers and punctuation.
-
-hoes = str.maketrans(hoInput, hoOutput, string.punctuation)
-# Removes other punctuation in case I forgot any.
-
-ius = str.maketrans(iuInput, iuOutput, '0123456789')
-# Also removes numbers (from verses).
-
-wros = str.maketrans(wrInput, wrOutput, string.ascii_letters)
-# Also removes books names.
+from Utility import deaccent
 
 theText = ''
 path = '/home/chris/PycharmProjects/learn/Texts/'
@@ -35,7 +13,7 @@ for filename in glob.glob(os.path.join(path, '*.txt')):
 # Combines every text file in the Text folder into a single
 # string "theText".
 
-plainText = theText.translate(aelphas).translate(hoes).translate(ius).translate(wros)
+plainText = deaccent(theText)
 wordList = plainText.lower().split()
 wordCounter = Counter()
 bigramList = []
