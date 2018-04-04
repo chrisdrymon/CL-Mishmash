@@ -12,7 +12,7 @@ for file_name in indir:
         for sentence in body:
             if sentence.tag == "sentence":
                 oldid = sentence.get('id')
-                newid = int(oldid) + 1050
+                newid = int(oldid) + 101
                 sentence.set('id', str(newid))
                 print(newid)
-    tb.write("newdeip.xml", encoding = "unicode")
+    tb.write("newAlci.xml", encoding = "unicode")
