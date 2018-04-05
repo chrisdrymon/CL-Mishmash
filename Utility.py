@@ -73,4 +73,4 @@ def resequence():
                                     word.set('head', str(newHeadID))
 
                 tb.write(file_name, encoding="unicode")
-                print("Rewrote:", file_name)
+                print("Resequenced:", file_name)

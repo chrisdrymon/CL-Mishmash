@@ -1,10 +1,14 @@
 import xml.etree.ElementTree as ET
 import os
-from collections import Counter
+from Utility import resequence
+
+# Necessary to run resequence so we don't have to deal with making unique sent-word ids throughout script.
+resequence()
 
 os.chdir('/home/chris/Desktop/CustomTB')
 indir = os.listdir('/home/chris/Desktop/CustomTB')
 punctuationCounter = Counter()
+puncInQuestion = ','
 
 # This creates a list of every word-id that will have the "presentation-after='.'" added to it.
 for file_name in indir:
@@ -17,24 +21,24 @@ for file_name in indir:
             for body in tbroot:
                 for sentence in body:
                     for word in sentence:
-                        if word.tag == 'word' and word.get('form') == '.':
+                        if word.tag == 'word' and word.get('form') == puncInQuestion:
                             periodWords.append(int(word.get('id'))-1)
 
-# This will assign "presentation-after='.'" to all the words in periodWords.
+# This will assign "presentation-after="puncInQuestion variable to all the words in periodWords.
             for body in tbroot:
                 for sentence in body:
                     for word in sentence:
                         if word.tag == 'word' and int(word.get('id')) in periodWords:
-                            word.set('presentation-after', '.')
+                            word.set('presentation-after', puncInQuestion)
 
-# This deletes all word elements which have the form '.'.
+# This deletes all word elements which have the form matching puncInQuestion.
             for body in tbroot:
                 for sentence in body:
                     for word in sentence.findall('word'):
-                        if word.get('form') == '.':
+                        if word.get('form') == puncInQuestion:
                             sentence.remove(word)
 
             tb.write(file_name, encoding = "unicode")
             print("Rewrote:", file_name)
 
-print(punctuationCounter)
+resequence()
