@@ -2,12 +2,11 @@ import xml.etree.ElementTree as ET
 import os
 from Utility import resequence
 
-# Necessary to run resequence so we don't have to deal with making unique sent-word ids throughout script.
+# Run resequence so we don't have to deal with making unique sentence-word ids throughout script.
 resequence()
 
 os.chdir('/home/chris/Desktop/CustomTB')
 indir = os.listdir('/home/chris/Desktop/CustomTB')
-punctuationCounter = Counter()
 puncInQuestion = ','
 
 # This creates a list of every word-id that will have the "presentation-after='.'" added to it.
@@ -41,4 +40,5 @@ for file_name in indir:
             tb.write(file_name, encoding = "unicode")
             print("Rewrote:", file_name)
 
+# Resequence to account for the deleted word elements.
 resequence()

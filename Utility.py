@@ -1,4 +1,5 @@
 import string
+import os
 import xml.etree.ElementTree as ET
 
 def deaccent(dastring):
