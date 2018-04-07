@@ -5,9 +5,9 @@ from Utility import resequence
 # Run resequence so we don't have to deal with making unique sentence-word ids throughout script.
 resequence()
 
-os.chdir('/home/chris/Desktop/CustomTB')
-indir = os.listdir('/home/chris/Desktop/CustomTB')
-puncInQuestion = ','
+os.chdir('/home/chris/Desktop/Treebanks')
+indir = os.listdir('/home/chris/Desktop/Treebanks')
+puncInQuestion = ';'
 
 # This creates a list of every word-id that will have the "presentation-after='.'" added to it.
 for file_name in indir:
@@ -23,7 +23,7 @@ for file_name in indir:
                         if word.tag == 'word' and word.get('form') == puncInQuestion:
                             periodWords.append(int(word.get('id'))-1)
 
-# This will assign "presentation-after="puncInQuestion variable to all the words in periodWords.
+# This will assign "presentation-after=" to the puncInQuestion variable to all the words in periodWords.
             for body in tbroot:
                 for sentence in body:
                     for word in sentence:

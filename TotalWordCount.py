@@ -2,9 +2,8 @@ import xml.etree.ElementTree as ET
 import os
 
 
-def perseuscount(treebank):
-    """Find every word of the chosen morphology which appears
-    and add it to a firstwordlist if it's not already part of that list."""
+def perseuscount(treebank, totalwordcount):
+    """Prints a wordcount for a Perseus treebank."""
     froot = treebank
     i = 0
     for body in froot:
@@ -12,11 +11,13 @@ def perseuscount(treebank):
             for word in sentence:
                 if word.tag == 'word':
                     i += 1
+    totalwordcount = totalwordcount + i
     print(i)
+    return(totalwordcount)
 
 
-def proielcount(treebank):
-    """Returns a list of two Counters filled with article stats for the given treebank and wordform."""
+def proielcount(treebank, totalwordcount):
+    """Prints a wordcount for a PROIEL treebank."""
     froot = treebank
     i = 0
     for source in froot:
@@ -25,18 +26,22 @@ def proielcount(treebank):
                 for token in sentence:
                     if token.tag == 'token':
                         i += 1
+    totalwordcount = totalwordcount + i
     print(i)
+    return(totalwordcount)
 
 
-os.chdir('/home/chris/Desktop/Treebanks')
-indir = os.listdir('/home/chris/Desktop/Treebanks')
+os.chdir('/home/chris/Desktop/CustomTB')
+indir = os.listdir('/home/chris/Desktop/CustomTB')
 
+totalWordCount = 0
 for file_name in indir:
     tb = ET.parse(file_name)
     tbroot = tb.getroot()
     print(file_name)
     if tbroot.tag == 'proiel':
-        proielcount(tbroot)
+        totalWordCount = proielcount(tbroot, totalWordCount)
     if tbroot.tag == 'treebank':
-        perseuscount(tbroot)
-# Updates firstWordList from each treebank.
+        totalWordCount = perseuscount(tbroot, totalWordCount)
+
+print('Total:', totalWordCount)
