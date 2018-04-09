@@ -2,6 +2,7 @@ import string
 import os
 import xml.etree.ElementTree as ET
 
+
 def deaccent(dastring):
     """Returns an unaccented version of dastring."""
     aeinput = "άἀἁἂἃἄἅἆἇὰάᾀᾁᾂᾃᾄᾅᾆᾇᾰᾱᾲᾳᾴᾶᾷἈἉΆἊἋἌἍἎἏᾈᾉᾊᾋᾌᾍᾎᾏᾸᾹᾺΆᾼέἐἑἒἓἔἕὲέἘἙἚἛἜἝΈῈΈ"
@@ -28,6 +29,7 @@ def deaccent(dastring):
 
     return dastring.translate(aelphas).translate(hoes).translate(ius).translate(wros).lower()
 
+
 def denumber(dalemma):
     """Removes number from the string dalemma."""
 
@@ -35,14 +37,16 @@ def denumber(dalemma):
 
     return dalemma.translate(numers)
 
+
 def resequence():
     """Numbers each word element in a treebank with a unique sequential id starting from 1. Then adjusts
     head-ids to match the new numbering."""
     os.chdir('/home/chris/Desktop/CustomTB')
     indir = os.listdir('/home/chris/Desktop/CustomTB')
-    wordDict = {}
+    worddict = {}
 
-    # This will create a dictionary matching old ID's to their new ones. Then it will assign the new ID.
+    # This will create a dictionary matching old ID's to their new ones so heads can be reassigned
+    # then it will assign the new sequential IDs.
     for file_name in indir:
         i = 1
         if not file_name == 'README.md' and not file_name == '.git':
@@ -54,10 +58,10 @@ def resequence():
                     for sentence in body:
                         for word in sentence:
                             if word.tag == 'word':
-                                sentenceID = str(sentence.get('id'))
-                                wordID = str(word.get('id'))
-                                sentWordID = str(sentenceID + '-' + wordID)
-                                wordDict[sentWordID] = i
+                                sentenceid = str(sentence.get('id'))
+                                wordid = str(word.get('id'))
+                                sentwordid = str(sentenceid + '-' + wordid)
+                                worddict[sentwordid] = i
                                 word.set('id', str(i))
                                 i += 1
 
@@ -66,12 +70,40 @@ def resequence():
                     for sentence in body:
                         for word in sentence:
                             if word.tag == 'word':
-                                sentenceID = str(sentence.get('id'))
-                                headID = str(word.get('head'))
-                                sentHeadID = str(sentenceID + '-' + headID)
-                                if sentHeadID in wordDict:
-                                    newHeadID = wordDict[sentHeadID]
-                                    word.set('head', str(newHeadID))
+                                sentenceid = str(sentence.get('id'))
+                                headid = str(word.get('head'))
+                                sentheadid = str(sentenceid + '-' + headid)
+                                if sentheadid in worddict:
+                                    newheadid = worddict[sentheadid]
+                                    word.set('head', str(newheadid))
+
+                tb.write(file_name, encoding="unicode")
+                print("Resequenced:", file_name)
+
+            if tbroot.tag == 'proiel':
+                for source in tbroot:
+                    for division in source:
+                        for sentence in division:
+                            for token in sentence:
+                                if token.tag == 'token':
+                                    sentenceid = str(sentence.get('id'))
+                                    wordid = str(token.get('id'))
+                                    sentwordid = str(sentenceid + '-' + wordid)
+                                    worddict[sentwordid] = i
+                                    token.set('id', str(i))
+                                    i += 1
+
+                for source in tbroot:
+                    for division in source:
+                        for sentence in division:
+                            for token in sentence:
+                                if token.tag == 'token':
+                                    sentenceid = str(sentence.get('id'))
+                                    headid = str(token.get('head-id'))
+                                    sentheadid = str(sentenceid + '-' + headid)
+                                    if sentheadid in worddict:
+                                        newheadid = worddict[sentheadid]
+                                        token.set('head-id', str(newheadid))
 
                 tb.write(file_name, encoding="unicode")
                 print("Resequenced:", file_name)
