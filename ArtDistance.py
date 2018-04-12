@@ -21,7 +21,6 @@ def proieltbs(treebank, artpos, filename):
                                 if artdistance < -100:
                                     print(filename, token.get('id'))
     # Subtracts Head-ID from Article-ID to gather distance between the two words. Adds it to counter.
-
     return artpos
 
 
@@ -39,7 +38,6 @@ def perseustbs(treebank, artpos, filename):
                         print(word.get('id'))
 
     # Subtracts Head-ID from Article-ID to gather distance between the two words. Adds it to counter.
-
     return artpos
 
 
