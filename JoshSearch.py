@@ -3,7 +3,7 @@ import os
 from Utility import deaccent
 
 
-def perseuscount(froot, i, j):
+def perseuscount(froot, i, j, inffile):
     """Prints every instance of this articular infinitive construction for Perseus treebank."""
     idtoheadid = {}
     inflist = []
@@ -27,45 +27,45 @@ def perseuscount(froot, i, j):
         for sentence in body:
             for word in sentence:
                 if word.tag == 'word':
-                    if deaccent(word.get('form')) == 'του' and word.get('head') in inflist:
+                    if deaccent(word.get('lemma')) == 'ο' and word.get('head') in inflist and \
+                            word.get('relation') == 'ATR':
                         infinitiveid = word.get('head')
                         mainverbid = idtoheadid[infinitiveid]
                         if mainverbid in verbslistbyid:
                             for infsubj in sentence:
                                 if infsubj.tag == 'word':
-                                    if infsubj.get('head') == infinitiveid and infsubj.get('relation') == 'SBJ':
+                                    if infsubj.get('head') == infinitiveid and infsubj.get('relation') == 'SBJ' and\
+                                            infsubj.get('postag')[7] == 'a':
                                         for infobj in sentence:
-                                            if infobj.get('postag')[7] == 'a' and infobj.get('head') == infinitiveid \
-                                                    and infobj.get('relation') == 'OBJ':
-                                                print(sentence.get('subdoc'), idtoform[mainverbid], infsubj.get('form'),
-                                                      "(SUBJ)", word.get('form'), idtoform[infinitiveid],
-                                                      infobj.get('form'))
-                                                i += 1
-                                    if infsubj.get('head') == mainverbid and infsubj.get('relation') == 'OBJ':
+                                            if infobj.tag == 'word':
+                                                if infobj.get('postag')[7] == 'a' and infobj.get('head')\
+                                                      == infinitiveid and infobj.get('relation') == 'OBJ':
+                                                    print(sentence.get('subdoc'), idtoform[mainverbid],
+                                                          infsubj.get('form'), '(SUBJ)', word.get('form'),
+                                                          idtoform[infinitiveid], infobj.get('form'))
+                                                    if int(word.get('id')) > int(infobj.get('id')):
+                                                        print('^^Backwards^^')
+                                                        j += 1
+                                                    i += 1
+                                    if infsubj.get('head') == mainverbid and infsubj.get('relation') == 'OBJ' and\
+                                            infsubj.get('postag')[7] == 'a':
                                         for infobj in sentence:
-                                            if infobj.get('postag')[7] == 'a' and infobj.get('head') == infinitiveid \
-                                                    and infobj.get('relation') == 'OBJ':
-                                                print(sentence.get('subdoc'), idtoform[mainverbid], infsubj.get('form'),
-                                                      "(OBJ)", word.get('form'), idtoform[infinitiveid],
-                                                      infobj.get('form'), idtoform[infinitiveid])
-                                                i += 1
+                                            if infobj.tag == 'word':
+                                                if infobj.get('postag')[7] == 'a' and infobj.get('head') ==\
+                                                        infinitiveid and infobj.get('relation') == 'OBJ':
+                                                    print(sentence.get('subdoc'), idtoform[mainverbid],
+                                                          infsubj.get('form'), "(OBJ)", word.get('form'),
+                                                          idtoform[infinitiveid], infobj.get('form'))
+                                                    inffile.write()
+                                                    if int(word.get('id')) > int(infobj.get('id')):
+                                                        print('^^Backwards^^')
+                                                        j += 1
+                                                    i += 1
 
-#                                        for infobj in sentence:
-     #                                       if infobj.tag == 'word':
-      #                                          if infobj.get('postag')[7] == 'a'\
-       #                                                 and infobj.get('head') == infinitiveid\
-        #                                                and infobj.get('relation') == 'OBJ':
-         #                                           print(sentence.get('subdoc'), idtoform[mainverbid],
-          #                                                infsubj.get('form'), word.get('form'),
-           #                                               idtoform[word.get('head')], infobj.get('form'))
-            #                                        if int(infobj.get('id')) < int(infsubj.get('id')):
-             #                                           print('^^Backwards!')
-              #                                          j += 1
-               #                                     i += 1
-    return i, j
+    return i, j, inffile
 
 
-def proielcount(froot, i, j):
+def proielcount(froot, i, j, inffile):
     """Prints every instance of this articular infinitive construction for PROIEL treebanks."""
     idtoheadid = {}
     inflist = []
@@ -93,42 +93,63 @@ def proielcount(froot, i, j):
                 if sentence.tag == 'sentence':
                     for token in sentence:
                         if token.tag == 'token' and token.get('empty-token-sort') is None:
-                            if deaccent(token.get('form')) == 'του' and token.get('head-id') in inflist:
+                            if deaccent(token.get('lemma')) == 'ο' and token.get('head-id') in inflist and\
+                                    token.get('relation') == 'aux':
                                 infinitiveid = token.get('head-id')
                                 mainverbid = idtoheadid[infinitiveid]
                                 if mainverbid in verbslistbyid:
                                     for infsubj in sentence:
                                         if infsubj.tag == 'token' and infsubj.get('empty-token-sort') is None:
                                             if infsubj.get('morphology')[6] == 'a' and \
-                                                    infsubj.get('head-id') == mainverbid:
+                                                    infsubj.get('head-id') == mainverbid and \
+                                                    infsubj.get('relation') == 'obj':
                                                 for infobj in sentence:
                                                     if infobj.tag == 'token' and infobj.get('empty-token-sort') is None:
                                                         if infobj.get('morphology')[6] == 'a' and \
-                                                                infobj.get('head-id') == infinitiveid:
+                                                                infobj.get('head-id') == infinitiveid and \
+                                                                infobj.get('relation') == 'obj':
                                                             print(token.get('citation-part'), idtoform[mainverbid],
-                                                                  infsubj.get('form'), token.get('form'),
+                                                                  infsubj.get('form'), 'OBJ', token.get('form'),
                                                                   idtoform[token.get('head-id')], infobj.get('form'))
-                                                            if int(infobj.get('id')) < int(infsubj.get('id')):
+                                                            if int(token.get('id')) > int(infobj.get('id')):
+                                                                print('^^Backwards!')
+                                                                j += 1
+                                                            i += 1
+                                            if infsubj.get('morphology)')[6] == 'a' and \
+                                                    infsubj.get('head-id') == infinitiveid and \
+                                                    infsubj.get('relation') == 'sub':
+                                                for infobj in sentence:
+                                                    if infobj.tag == 'token' and infobj.get('empty-token-sort') is None:
+                                                        if infobj.get('morphology')[6] == 'a' and \
+                                                                infobj.get('head-id') == infinitiveid and \
+                                                                infobj.get('relation') == 'obj':
+                                                            print(token.get('citation-part'), idtoform[mainverbid],
+                                                                  infsubj.get('form'), 'SUB', token.get('form'),
+                                                                  idtoform[token.get('head-id')], infobj.get('form'))
+                                                            if int(token.get('id')) > int(infobj.get('id')):
                                                                 print('^^Backwards!')
                                                                 j += 1
                                                             i += 1
 
-    return i, j
+    return i, j, inffile
 
 
 os.chdir('/home/chris/Desktop/CustomTB')
 indir = os.listdir('/home/chris/Desktop/CustomTB')
-
+infFile = open('articularinf.txt', 'w')
+infFile.write('Every time an articular infinitive occurs with a head that is an explicit verb and that articular '
+              'infinitive also has an explicit accusative subject and accusative object.')
 infCount = 0
 backwardCount = 0
 for file_name in indir:
-    tb = ET.parse(file_name)
-    tbroot = tb.getroot()
-#    print(file_name)
-#    if tbroot.tag == 'proiel':
-#        infCount, backwardCount = proielcount(tbroot, infCount, backwardCount)
-    if tbroot.tag == 'treebank':
+    if not file_name == 'README.md':
+        tb = ET.parse(file_name)
+        tbroot = tb.getroot()
         print(file_name)
-        infCount, backwardCount = perseuscount(tbroot, infCount, backwardCount)
-
-print('Total:', infCount)
+        if tbroot.tag == 'proiel':
+            infCount, backwardCount, infFile = proielcount(tbroot, infCount, backwardCount, infFile)
+        if tbroot.tag == 'treebank':
+            infCount, backwardCount, infFile = perseuscount(tbroot, infCount, backwardCount, infFile)
+infFile.close()
+print('This construction occurs', infCount, 'times.')
+print('The object of the infinitive occurs before the article of the infinitive', backwardCount, 'times.')
