@@ -32,7 +32,7 @@ def perseuscount(froot, i, j, inffile, fn):
                                 if infobj.get('head') == infinitiveid and infobj.get('relation') == 'OBJ':
                                     print(sentence.get('subdoc'), word.get('form'), idtoform[infinitiveid],
                                           infobj.get('form'))
-                                    inffile.writelines([fn, sentence.get('subdoc')])
+                                    inffile.writelines([fn,'\n', sentence.get('subdoc')])
                                     if int(word.get('id')) > int(infobj.get('id')):
                                         print('^^Backwards^^')
                                         j += 1
@@ -75,7 +75,7 @@ def proielcount(froot, i, j, inffile, fn):
                                                   idtoform[infinitiveid], infobj.get('form'))
                                             inffile.writelines([fn, token.get('citation-part')])
                                             if int(token.get('id')) > int(infobj.get('id')):
-                                                print('^^Backwards!')
+                                                print('^^Backwards!^^')
                                                 j += 1
                                             i += 1
     return i, j, inffile
@@ -84,8 +84,7 @@ def proielcount(froot, i, j, inffile, fn):
 os.chdir('/home/chris/Desktop/CustomTB')
 indir = os.listdir('/home/chris/Desktop/CustomTB')
 infFile = open('/home/chris/Desktop/articularinf.txt', 'w')
-infFile.write('Every time an articular infinitive occurs with a head that is an explicit verb and that articular '
-              'infinitive also has an explicit accusative subject and accusative object.')
+infFile.write('Every time an articular infinitive occurs with an explicit object.')
 infCount = 0
 backwardCount = 0
 for file_name in indir:
