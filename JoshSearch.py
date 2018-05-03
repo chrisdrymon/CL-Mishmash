@@ -3,8 +3,8 @@ import os
 from Utility import deaccent
 
 
-def perseuscount(froot, i, j, inffile):
-    """Prints every instance of this articular infinitive construction for Perseus treebank."""
+def perseuscount(froot, i, j, inffile, fn):
+    """Prints every instance of this articular infinitive construction for Perseus treebanks."""
     idtoheadid = {}
     inflist = []
     verbslistbyid = []
@@ -43,6 +43,7 @@ def perseuscount(froot, i, j, inffile):
                                                     print(sentence.get('subdoc'), idtoform[mainverbid],
                                                           infsubj.get('form'), '(SUBJ)', word.get('form'),
                                                           idtoform[infinitiveid], infobj.get('form'))
+                                                    inffile.writelines([fn, sentence.get('subdoc')])
                                                     if int(word.get('id')) > int(infobj.get('id')):
                                                         print('^^Backwards^^')
                                                         j += 1
@@ -56,7 +57,7 @@ def perseuscount(froot, i, j, inffile):
                                                     print(sentence.get('subdoc'), idtoform[mainverbid],
                                                           infsubj.get('form'), "(OBJ)", word.get('form'),
                                                           idtoform[infinitiveid], infobj.get('form'))
-                                                    inffile.write()
+                                                    inffile.writelines([fn, sentence.get('subdoc')])
                                                     if int(word.get('id')) > int(infobj.get('id')):
                                                         print('^^Backwards^^')
                                                         j += 1
@@ -65,7 +66,7 @@ def perseuscount(froot, i, j, inffile):
     return i, j, inffile
 
 
-def proielcount(froot, i, j, inffile):
+def proielcount(froot, i, j, inffile, fn):
     """Prints every instance of this articular infinitive construction for PROIEL treebanks."""
     idtoheadid = {}
     inflist = []
@@ -111,11 +112,12 @@ def proielcount(froot, i, j, inffile):
                                                             print(token.get('citation-part'), idtoform[mainverbid],
                                                                   infsubj.get('form'), 'OBJ', token.get('form'),
                                                                   idtoform[token.get('head-id')], infobj.get('form'))
+                                                            inffile.writelines([fn, token.get('citation-part')])
                                                             if int(token.get('id')) > int(infobj.get('id')):
                                                                 print('^^Backwards!')
                                                                 j += 1
                                                             i += 1
-                                            if infsubj.get('morphology)')[6] == 'a' and \
+                                            if infsubj.get('morphology')[6] == 'a' and \
                                                     infsubj.get('head-id') == infinitiveid and \
                                                     infsubj.get('relation') == 'sub':
                                                 for infobj in sentence:
@@ -126,6 +128,7 @@ def proielcount(froot, i, j, inffile):
                                                             print(token.get('citation-part'), idtoform[mainverbid],
                                                                   infsubj.get('form'), 'SUB', token.get('form'),
                                                                   idtoform[token.get('head-id')], infobj.get('form'))
+                                                            inffile.writelines([fn, token.get('citation-part')])
                                                             if int(token.get('id')) > int(infobj.get('id')):
                                                                 print('^^Backwards!')
                                                                 j += 1
@@ -136,7 +139,7 @@ def proielcount(froot, i, j, inffile):
 
 os.chdir('/home/chris/Desktop/CustomTB')
 indir = os.listdir('/home/chris/Desktop/CustomTB')
-infFile = open('articularinf.txt', 'w')
+infFile = open('/home/chris/Desktop/articularinf.txt', 'w')
 infFile.write('Every time an articular infinitive occurs with a head that is an explicit verb and that articular '
               'infinitive also has an explicit accusative subject and accusative object.')
 infCount = 0
@@ -147,9 +150,9 @@ for file_name in indir:
         tbroot = tb.getroot()
         print(file_name)
         if tbroot.tag == 'proiel':
-            infCount, backwardCount, infFile = proielcount(tbroot, infCount, backwardCount, infFile)
+            infCount, backwardCount, infFile = proielcount(tbroot, infCount, backwardCount, infFile, file_name)
         if tbroot.tag == 'treebank':
-            infCount, backwardCount, infFile = perseuscount(tbroot, infCount, backwardCount, infFile)
+            infCount, backwardCount, infFile = perseuscount(tbroot, infCount, backwardCount, infFile, file_name)
 infFile.close()
 print('This construction occurs', infCount, 'times.')
 print('The object of the infinitive occurs before the article of the infinitive', backwardCount, 'times.')
