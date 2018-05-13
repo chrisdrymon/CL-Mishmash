@@ -3,7 +3,7 @@ from collections import Counter
 import math
 import os
 import glob
-from Utility import deaccent
+from utility import deaccent
 
 theText = ''
 path = '/home/chris/PycharmProjects/learn/Texts/'

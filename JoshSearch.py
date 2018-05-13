@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 import os
-from Utility import deaccent
+from utility import deaccent
 
 
 def perseuscount(froot, i, j, inffile, fn):

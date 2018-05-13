@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 from collections import Counter
 import os
 import pandas as pd
-from Utility import deaccent
+from utility import deaccent
 
 formOrLemma = 'lemma'
 wordCounter = Counter()

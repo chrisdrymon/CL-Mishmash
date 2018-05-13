@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 import os
-from Utility import resequence
+from utility import resequence
 
 # Run resequence so we don't have to deal with making unique sentence-word ids throughout script.
 resequence()
