@@ -16,7 +16,7 @@ def proieltbs(treebank):
                 for token in alltokesinsent:
                     subject = 'ellipsed'
                     vobject = 'ellipsed'
-                    if deaccent(token.get('lemma')) == 'περισσευω':
+                    if deaccent(token.get('lemma')) == 'περισσευω' and not token.get('morphology')[4] == 'a':
                         verbid = token.get('id')
                         for word in alltokesinsent:
                             if word.get('head-id') == verbid and word.get('relation') == 'sub':
@@ -40,7 +40,7 @@ def perseustbs(treebank):
             for verb in alltokesinsent:
                 subject = 'ellipsed'
                 vobject = 'ellipsed'
-                if deaccent(verb.get('lemma')) == 'περισσευω':
+                if deaccent(verb.get('lemma')) == 'περισσευω' and not verb.get('postag')[5] == 'a':
                     verbid = verb.get('id')
                     for word in alltokesinsent:
                         if word.get('head') == verbid and word.get('relation') == 'sub':
