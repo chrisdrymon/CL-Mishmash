@@ -5,6 +5,8 @@ from utility import deaccent
 
 def proieltbs(treebank):
     froot = treebank.getroot()
+    author = 'unknown'
+    title = 'unknown'
     for source in froot:
         for division in source:
             if division.tag == 'title':
@@ -15,15 +17,21 @@ def proieltbs(treebank):
                 alltokesinsent = sentence.findall(".*[@form]")
                 for token in alltokesinsent:
                     subject = 'ellipsed'
-                    vobject = 'ellipsed'
-                    if deaccent(token.get('lemma')) == 'περισσευω' and not token.get('morphology')[4] == 'a':
+                    en = 'ellipsed'
+                    prepobj = 'ellipsed'
+                    if deaccent(token.get('lemma')) == 'περισσευω' and token.get('morphology')[4] == 'a':
                         verbid = token.get('id')
                         for word in alltokesinsent:
-                            if word.get('head-id') == verbid and word.get('relation') == 'sub':
-                                subject = word.get('form')
-                            if word.get('head-id') == verbid and word.get('relation') == 'obj':
-                                vobject = word.get('form')
-                        print(author, title, subject, token.get('form'), vobject)
+                            if word.get('head-id') == verbid:
+                                if word.get('relation') == 'sub':
+                                    subject = word.get('form')
+                                if word.get('lemma') == 'ἐν':
+                                    en = 'ἐν'
+                                    enid = word.get('id')
+                                    for preobj in alltokesinsent:
+                                        if preobj.get('head-id') == enid:
+                                            prepobj = preobj.get('form')
+                        print(author, ":", title, subject, token.get('form'), en, prepobj)
     return
 
 
@@ -39,15 +47,21 @@ def perseustbs(treebank):
             alltokesinsent = sentence.findall(".*[@form]")
             for verb in alltokesinsent:
                 subject = 'ellipsed'
-                vobject = 'ellipsed'
-                if deaccent(verb.get('lemma')) == 'περισσευω' and not verb.get('postag')[5] == 'a':
+                en = 'ellipsed'
+                prepobj = 'ellipsed'
+                if deaccent(verb.get('lemma')) == 'περισσευω' and verb.get('postag')[5] == 'a':
                     verbid = verb.get('id')
                     for word in alltokesinsent:
-                        if word.get('head') == verbid and word.get('relation') == 'sub':
-                            subject = word.get('form')
-                        if word.get('head') == verbid and word.get('relation') == 'obj':
-                            vobject = word.get('form')
-                    print(author, title, subject, verb.get('form'), vobject)
+                        if word.get('head') == verbid:
+                            if word.get('relation') == 'sub':
+                                subject = word.get('form')
+                            if word.get('lemma') == 'ἐν':
+                                en = 'ἐν'
+                                enid = word.get('id')
+                                for preobj in alltokesinsent:
+                                    if preobj.get('head-id') == enid:
+                                        prepobj = preobj.get('form')
+                    print(author, ":", title, subject, verb.get('form'), en, prepobj)
     return
 
 
